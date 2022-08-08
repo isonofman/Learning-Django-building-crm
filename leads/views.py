@@ -1,9 +1,11 @@
+from msilib.schema import ListView
 from multiprocessing import context
+from tempfile import template
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import  Lead, Agent
 from .forms import LeadForm, LeadModelForm
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
 
 
@@ -11,10 +13,11 @@ from django.views.generic import TemplateView
 
 class LandingPageView(TemplateView):
     template_name = 'landing.html'
+    
 
 
-def landing_page(request):
-    return render(request, 'landing.html')
+""" def landing_page(request):
+    return render(request, 'landing.html') """
 
 def leads_list(request):
     leads = Lead.objects.all()
@@ -22,6 +25,11 @@ def leads_list(request):
     'leads': leads
     }
     return render(request, 'leads/lead_list.html', context)
+
+class LeadListView(ListView):
+    template_name = 'leads/lead_list.html'
+    queryset = Lead.objects.all()
+    context_object_name = 'leads'
 
 def lead_detail(request, pk):
     print(pk)
