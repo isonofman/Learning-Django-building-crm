@@ -1,29 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-class Agent(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
+
+class User(AbstractUser):
+    pass
 
 class Lead(models.Model):
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    age = models.IntegerField(default=12)
+    agent = models.ForeignKey("Agent",on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'{self.first_name} {self.last_name}'
 
 
-    SOURCE_CHOICES = (
-        ('Youtube', 'Youtube'),
-        ('Google', 'Google'),
-        ('Newsletter', 'Newsletter'),
-    )
-    first_name =models.CharField(max_length=20)
-    last_name =models.CharField(max_length=20)
-    age =models.IntegerField(default=12)
+class Agent(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    phoned = models.BooleanField(default=False)
-    source = models.CharField(choices=SOURCE_CHOICES, max_length=100)
-
-
-    profile_picture = models.ImageField(blank=True, nul=True)
-    special_files = models.FileField(blank=True, null= True)
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
-
-
+    def __str__(self) -> str:
+        return (self.user.email)
 
